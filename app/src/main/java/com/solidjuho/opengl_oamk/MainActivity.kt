@@ -7,13 +7,17 @@ import com.solidjuho.opengl_oamk.fragments.HomeFragment
 import com.solidjuho.opengl_oamk.fragments.SettingsFragment
 import com.solidjuho.opengl_oamk.fragments.StoreFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.solidjuho.opengl_oamk.databinding.ActivityMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         val homeFragment = HomeFragment()
         val storeFragment = StoreFragment()

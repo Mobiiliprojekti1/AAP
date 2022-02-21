@@ -2,6 +2,7 @@ package com.solidjuho.opengl_oamk.game
 
 import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.os.Handler
 import android.view.MotionEvent
@@ -17,7 +18,7 @@ import com.solidjuho.opengl_oamk.databinding.ActivityGameBinding
 class GameActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameBinding
-    private lateinit var fullscreenContent: TextView
+    private lateinit var fullscreenContent: GLSurfaceView
     private lateinit var fullscreenContentControls: LinearLayout
     private val hideHandler = Handler()
 
