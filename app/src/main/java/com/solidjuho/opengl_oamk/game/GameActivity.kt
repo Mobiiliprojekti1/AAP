@@ -1,6 +1,5 @@
 package com.solidjuho.opengl_oamk.game
 
-import androidx.appcompat.app.AppCompatActivity
 import android.annotation.SuppressLint
 import android.opengl.GLSurfaceView
 import android.os.Bundle
@@ -8,7 +7,7 @@ import android.os.Handler
 import android.view.MotionEvent
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import com.solidjuho.opengl_oamk.databinding.ActivityGameBinding
 
 /**
