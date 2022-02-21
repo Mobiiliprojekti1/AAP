@@ -1,29 +1,34 @@
 package com.solidjuho.opengl_oamk.game
 
 import android.app.Activity
+import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.View
 import android.widget.LinearLayout
 import com.solidjuho.opengl_oamk.databinding.ActivityGameBinding
+import android.os.Handler
+import android.os.Looper
+import androidx.appcompat.app.AppCompatActivity
 
-class GameActivity : Activity() {
+class GameActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameBinding
     private lateinit var fullscreenContent: GLSurfaceView
     private lateinit var fullscreenContentControls: LinearLayout
-    private lateinit var gameView: GameView
+    private lateinit var gameView: GLSurfaceView
 
     private var isFullscreen: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        //OpenGL stuff
+        gameView = GameView(this)
         super.onCreate(savedInstanceState)
 
         binding = ActivityGameBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-
-//        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setContentView(gameView)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         isFullscreen = true
 
@@ -32,11 +37,7 @@ class GameActivity : Activity() {
         fullscreenContent.setOnClickListener { toggle() }
 
         fullscreenContentControls = binding.fullscreenContentControls
-
-        //OpenGL stuff
-        gameView = GameView(this)
-
-
+//        GLES20.glDrawArrays()
     }
 
 
@@ -50,7 +51,7 @@ class GameActivity : Activity() {
 
     private fun hide() {
         // Hide UI first
-//        supportActionBar?.hide()
+        supportActionBar?.hide()
         fullscreenContentControls.visibility = View.GONE
         isFullscreen = false
     }

@@ -17,7 +17,6 @@
     <style name="Theme.OpenGL_oamk.Fullscreen" parent="Theme.OpenGL_oamk">
         <item name="android:actionBarStyle">@style/Widget.Theme.OpenGL_oamk.ActionBar.Fullscreen
         </item>
-        <item name="android:windowActionBarOverlay">true</item>
         <item name="android:windowBackground">@null</item>
     </style>
 
