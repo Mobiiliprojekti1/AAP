@@ -7,4 +7,7 @@
     <string name="settings">Settings</string>
     <string name="currency">Galatic credits</string>
     <string name="play">Play!</string>
+    <string name="title_activity_game">FullscreenActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
