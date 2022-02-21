@@ -1,7 +1,6 @@
 package com.solidjuho.opengl_oamk.game
 
 import android.app.Activity
-import androidx.appcompat.app.AppCompatActivity
 import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.View
