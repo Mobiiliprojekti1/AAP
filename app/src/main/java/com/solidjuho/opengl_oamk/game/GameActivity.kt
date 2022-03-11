@@ -1,43 +1,46 @@
 package com.solidjuho.opengl_oamk.game
 
-import android.app.Activity
-import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import com.solidjuho.opengl_oamk.databinding.ActivityGameBinding
-import android.os.Handler
-import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
+import com.solidjuho.opengl_oamk.databinding.ActivityGameBinding
 
 class GameActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameBinding
     private lateinit var fullscreenContent: GLSurfaceView
     private lateinit var fullscreenContentControls: LinearLayout
-    private lateinit var gameView: GLSurfaceView
 
     private var isFullscreen: Boolean = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        //OpenGL stuff
-        gameView = GameView(this)
+        // OpenGL stuff
         super.onCreate(savedInstanceState)
-
         binding = ActivityGameBinding.inflate(layoutInflater)
-        setContentView(gameView)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        setContentView(binding.root)
 
         isFullscreen = true
+        hideSystemBars()
 
         // Set up the user interaction to manually show or hide the system UI.
-        fullscreenContent = binding.fullscreenContent
-        fullscreenContent.setOnClickListener { toggle() }
+        fullscreenContent = binding.openGlCanvas
+        fullscreenContent.setOnClickListener {
+            Log.d("GLScreen", "Touch")
+            toggle()
+        }
+
+        binding.dummyButton.setOnClickListener {
+            showSystemBars()
+        }
 
         fullscreenContentControls = binding.fullscreenContentControls
-//        GLES20.glDrawArrays()
     }
 
 
@@ -51,30 +54,34 @@ class GameActivity : AppCompatActivity() {
 
     private fun hide() {
         // Hide UI first
-        supportActionBar?.hide()
         fullscreenContentControls.visibility = View.GONE
         isFullscreen = false
+        hideSystemBars()
     }
 
     private fun show() {
         // Show the system bar
+        fullscreenContentControls.visibility = View.VISIBLE
         isFullscreen = true
-
     }
 
+    private fun hideSystemBars() {
+        val windowInsetsController =
+            ViewCompat.getWindowInsetsController(window.decorView) ?: return
+        // Configure the behavior of the hidden system bars
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        // Hide both the status bar and the navigation bar
+        windowInsetsController.hide(WindowInsetsCompat.Type.systemBars())
+    }
 
-    companion object {
-        /**
-         * Whether or not the system UI should be auto-hidden after
-         * [AUTO_HIDE_DELAY_MILLIS] milliseconds.
-         */
-        private const val AUTO_HIDE = true
-
-        /**
-         * If [AUTO_HIDE] is set, the number of milliseconds to wait after
-         * user interaction before hiding the system UI.
-         */
-        private const val AUTO_HIDE_DELAY_MILLIS = 3000
-
+    private fun showSystemBars() {
+        val windowInsetsController =
+            ViewCompat.getWindowInsetsController(window.decorView) ?: return
+        // Configure the behavior of the hidden system bars
+        windowInsetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        // Hide both the status bar and the navigation bar
+        windowInsetsController.show(WindowInsetsCompat.Type.systemBars())
     }
 }
