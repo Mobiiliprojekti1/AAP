@@ -5,6 +5,7 @@ import android.opengl.GLES30
 import android.opengl.GLSurfaceView
 import android.opengl.Matrix
 import android.os.SystemClock
+import android.util.Log
 import com.solidjuho.opengl_oamk.R
 import com.solidjuho.opengl_oamk.game.draw.Square
 import com.solidjuho.opengl_oamk.game.draw.Triangle
@@ -22,6 +23,10 @@ class GameRenderer(context: Context) : GLSurfaceView.Renderer {
     private var viewMatrix = FloatArray(16)
 
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
+        // Log OpenGL version and GLSL version
+        Log.i("OpenGL version", GLES30.glGetString(GLES30.GL_VERSION))
+        Log.i("GLSL version", GLES30.glGetString(GLES30.GL_SHADING_LANGUAGE_VERSION))
+
         // Set the background frame color
         GLES30.glClearColor(.3f, 1.0f, .4f, 1.0f)
 
@@ -72,19 +77,10 @@ class GameRenderer(context: Context) : GLSurfaceView.Renderer {
         Matrix.setRotateM(rotMatrix, 0, angle, 0f, 0f, -1f)
         mSquare.draw(vPMatrix, rotMatrix, translateMatrix)
 
-        Matrix.setRotateM(rotMatrix, 0, 180f, 0f, 0f, 1f)
-        Matrix.translateM(translateMatrix, 0, 0f, 0.5f, 0f)
-
-        mSquare2.draw(vPMatrix, rotMatrix, translateMatrix)
-
-        Matrix.setRotateM(rotMatrix, 0, 0f, 0f, 0f, 1f)
-        Matrix.translateM(translateMatrix, 0, 0f, -1f, 0f)
-
-        Matrix.setIdentityM(scaleMatrix, 0)
-        Matrix.scaleM(scaleMatrix, 0, 0.1f, 0.1f, 0f)
-        Matrix.multiplyMM(vPMatrix, 0, vPMatrix, 0, scaleMatrix, 0)
-
-        mTriangle.draw(vPMatrix, rotMatrix, translateMatrix)
+        // Apply all transforms for the second square
+        mSquare2.rotate(0f, 0f, angle)
+        mSquare2.move(0f, dy, 0f)
+        mSquare2.draw(vPMatrix)
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {

@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.BitmapFactory
 import android.opengl.GLES30
 import android.opengl.GLUtils
-import android.util.Log
+import android.opengl.Matrix
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -122,9 +122,6 @@ class Square {
             // creates OpenGL ES program executables
             GLES30.glLinkProgram(it)
         }
-
-        Log.i("GLSLv", GLES30.glGetString(GLES30.GL_SHADING_LANGUAGE_VERSION))
-        Log.i("GLESv", GLES30.glGetString(GLES30.GL_VERSION))
     }
 
     private var positionHandle: Int = 0
@@ -167,6 +164,12 @@ class Square {
     private var aTexCoordinatesHandle: Int = 0
 
     fun draw(mvpMatrix: FloatArray, rotationMatrix: FloatArray, translateMatrix: FloatArray) {
+        rotMatrix = rotationMatrix
+        translationMatrix = translateMatrix
+        draw(mvpMatrix)
+    }
+
+    fun draw(mvpMatrix: FloatArray) {
         // Add program to OpenGL ES environment
         GLES30.glUseProgram(mProgram)
 
@@ -200,8 +203,8 @@ class Square {
 
             // pass the projection and view transformation to the shape
             GLES30.glUniformMatrix4fv(uPMatrixHandle, 0, false, mvpMatrix, 0)
-            GLES30.glUniformMatrix4fv(uRotationMatrixHandle, 0, false, rotationMatrix, 0)
-            GLES30.glUniformMatrix4fv(uTranslateMatrixHandle, 0, false, translateMatrix, 0)
+            GLES30.glUniformMatrix4fv(uRotationMatrixHandle, 0, false, rotMatrix, 0)
+            GLES30.glUniformMatrix4fv(uTranslateMatrixHandle, 0, false, translationMatrix, 0)
 
             // Set textures
             uTextureHandle = GLES30.glGetUniformLocation(mProgram, "uTexture")
@@ -229,5 +232,18 @@ class Square {
             GLES30.glDisableVertexAttribArray(aTexCoordinatesHandle)
         }
     }
+
+    private var rotMatrix = FloatArray(16)
+    private var translationMatrix = FloatArray(16)
+
+    fun rotate(x: Float, y: Float, z: Float) {
+        Matrix.setRotateEulerM(rotMatrix, 0, x, y, z)
+    }
+
+    fun move(x: Float, y: Float, z: Float) {
+        Matrix.setIdentityM(translationMatrix, 0)
+        Matrix.translateM(translationMatrix, 0, x, y, z)
+    }
+
 }
 
