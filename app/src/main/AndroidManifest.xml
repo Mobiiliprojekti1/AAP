@@ -17,7 +17,6 @@
             android:name=".game.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
-            android:label="@string/title_activity_game"
             android:theme="@style/Theme.OpenGL_oamk.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
