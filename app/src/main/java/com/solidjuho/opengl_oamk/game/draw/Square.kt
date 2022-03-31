@@ -53,12 +53,14 @@ class Square {
             precision mediump float;
             uniform vec4 vColor;
             uniform sampler2D uTexture;
+            uniform bool wireframe;
             
             in vec2 vTexCoordinates;
             layout(location=0) out vec4 fragColor;
             
             void main() {
-                fragColor = texture(uTexture, vTexCoordinates) * vColor;
+                if (!wireframe) fragColor = texture(uTexture, vTexCoordinates) * vColor;
+                else fragColor = vColor;
             }
         """.trimIndent()
 
@@ -162,14 +164,20 @@ class Square {
     private var uTranslateMatrixHandle: Int = 0
     private var uTextureHandle: Int = 0
     private var aTexCoordinatesHandle: Int = 0
+    private var uWireframe: Int = 0
 
-    fun draw(mvpMatrix: FloatArray, rotationMatrix: FloatArray, translateMatrix: FloatArray) {
+    fun draw(
+        mvpMatrix: FloatArray,
+        rotationMatrix: FloatArray,
+        translateMatrix: FloatArray,
+        wireFrame: Boolean = false
+    ) {
         rotMatrix = rotationMatrix
         translationMatrix = translateMatrix
-        draw(mvpMatrix)
+        draw(mvpMatrix, wireFrame)
     }
 
-    fun draw(mvpMatrix: FloatArray) {
+    fun draw(mvpMatrix: FloatArray, wireFrame: Boolean = false) {
         // Add program to OpenGL ES environment
         GLES30.glUseProgram(mProgram)
 
@@ -206,6 +214,9 @@ class Square {
             GLES30.glUniformMatrix4fv(uRotationMatrixHandle, 0, false, rotMatrix, 0)
             GLES30.glUniformMatrix4fv(uTranslateMatrixHandle, 0, false, translationMatrix, 0)
 
+            uWireframe = GLES30.glGetUniformLocation(mProgram, "wireframe")
+            GLES30.glUniform1i(uWireframe, wireFrame.toInt())
+
             // Set textures
             uTextureHandle = GLES30.glGetUniformLocation(mProgram, "uTexture")
             aTexCoordinatesHandle = GLES30.glGetAttribLocation(mProgram, "aTexCoordinates")
@@ -224,8 +235,11 @@ class Square {
             GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, textureBuffer[0])
             GLES30.glUniform1i(uTextureHandle, 0)
 
-            // Draw the triangle
-            GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount)
+            // Draw the square
+            if (!wireFrame) GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, vertexCount)
+            // Draw wireframe square
+            else GLES30.glDrawArrays(GLES30.GL_LINE_LOOP, 0, vertexCount)
+
 
             // Disable vertex array
             GLES30.glDisableVertexAttribArray(it)
@@ -245,5 +259,8 @@ class Square {
         Matrix.translateM(translationMatrix, 0, x, y, z)
     }
 
+    private fun Boolean.toInt() = if (this) 1 else 0
+
 }
+
 

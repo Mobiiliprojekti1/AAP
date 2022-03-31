@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.solidjuho.opengl_oamk">
 
+    <uses-feature
+        android:glEsVersion="0x00030000"
+        android:required="true" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,21 +16,24 @@
         <activity
             android:name=".game.GameActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
             android:label="@string/title_activity_game"
-            android:theme="@style/Theme.OpenGL_oamk.Fullscreen" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
+            android:theme="@style/Theme.OpenGL_oamk.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
 
-    <uses-feature android:glEsVersion="0x00030002" android:required="true" />
-    <supports-gl-texture android:name="GL_OES_compressed_ETC1_RGB8_texture" />
-    <supports-gl-texture android:name="GL_OES_compressed_paletted_texture" />
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
+    </application>
 
 </manifest>
