@@ -6,10 +6,28 @@ import android.util.AttributeSet
 import android.util.Log
 
 class GameView(context: Context, attrs: AttributeSet) : GLSurfaceView(context, attrs) {
+    fun toggleWireframe() {
+        renderer.wireframe = !renderer.wireframe
+        requestRender()
+    }
+
+    fun getWireframeState(): Boolean {
+        return renderer.wireframe
+    }
+
+    fun toggleTransparency() {
+        renderer.transparency = !renderer.transparency
+        requestRender()
+    }
+
+    fun getTransparencyState(): Boolean {
+        return renderer.transparency
+    }
+
     private val renderer: GameRenderer
 
     init {
-        Log.println(Log.INFO,"TAG_TEST","GameView init")
+        Log.println(Log.INFO, "TAG_TEST", "GameView init")
         setEGLContextClientVersion(3)
         renderer = GameRenderer(context)
         setRenderer(renderer)

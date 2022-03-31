@@ -22,16 +22,22 @@ class GameRenderer(context: Context) : GLSurfaceView.Renderer {
     private var projectionMatrix = FloatArray(16)
     private var viewMatrix = FloatArray(16)
 
+    var transparency: Boolean = true
+    var wireframe: Boolean = true
+
     override fun onSurfaceCreated(unused: GL10, config: EGLConfig) {
+        GLES30.glEnable(GLES30.GL_CULL_FACE)
+        GLES30.glCullFace(GLES30.GL_BACK)
+
         // Log OpenGL version and GLSL version
         Log.i("OpenGL version", GLES30.glGetString(GLES30.GL_VERSION))
         Log.i("GLSL version", GLES30.glGetString(GLES30.GL_SHADING_LANGUAGE_VERSION))
 
         // Set the background frame color
-        GLES30.glClearColor(.3f, 1.0f, .4f, 1.0f)
+        GLES30.glClearColor(0f, 0f, 0f, 1.0f)
 
         GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA)
-        GLES30.glEnable(GLES30.GL_BLEND)
+        if (transparency) GLES30.glEnable(GLES30.GL_BLEND)
 
         // initialize a triangle
         mTriangle = Triangle()
@@ -48,6 +54,12 @@ class GameRenderer(context: Context) : GLSurfaceView.Renderer {
     private var dy: Float = 0f
 
     override fun onDrawFrame(unused: GL10) {
+        if (transparency) GLES30.glEnable(GLES30.GL_BLEND)
+        else GLES30.glDisable(GLES30.GL_BLEND)
+
+        if (wireframe) GLES30.glClearColor(0f, 0f, 0f, 1f)
+        else GLES30.glClearColor(.3f, 1.0f, .4f, 1.0f)
+
         // Redraw background color
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
 
@@ -74,13 +86,13 @@ class GameRenderer(context: Context) : GLSurfaceView.Renderer {
         val translateMatrix = FloatArray(16)
         Matrix.setIdentityM(translateMatrix, 0)
         Matrix.translateM(translateMatrix, 0, 0f, 0f, 0f)
-        Matrix.setRotateM(rotMatrix, 0, angle, 0f, 0f, -1f)
-        mSquare.draw(vPMatrix, rotMatrix, translateMatrix)
+        Matrix.setRotateM(rotMatrix, 0, angle, 0f, 1f, 0f)
+        mSquare.draw(vPMatrix, rotMatrix, translateMatrix, wireframe)
 
         // Apply all transforms for the second square
         mSquare2.rotate(0f, 0f, angle)
         mSquare2.move(0f, dy, 0f)
-        mSquare2.draw(vPMatrix)
+        mSquare2.draw(vPMatrix, wireframe)
     }
 
     override fun onSurfaceChanged(unused: GL10, width: Int, height: Int) {

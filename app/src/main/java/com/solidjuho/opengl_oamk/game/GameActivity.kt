@@ -1,6 +1,5 @@
 package com.solidjuho.opengl_oamk.game
 
-import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,12 +8,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.solidjuho.opengl_oamk.R
 import com.solidjuho.opengl_oamk.databinding.ActivityGameBinding
 
 class GameActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityGameBinding
-    private lateinit var fullscreenContent: GLSurfaceView
+    private lateinit var fullscreenContent: GameView
     private lateinit var fullscreenContentControls: LinearLayout
 
     private var isFullscreen: Boolean = false
@@ -35,9 +35,29 @@ class GameActivity : AppCompatActivity() {
             toggle()
         }
 
-        binding.dummyButton.setOnClickListener {
-            showSystemBars()
+        binding.wireframeBtn.setOnClickListener {
+            fullscreenContent.toggleWireframe()
+            binding.wireframeBtn.text = String.format(
+                resources.getString(R.string.wireframe_button),
+                if (fullscreenContent.getWireframeState()) "On" else "Off",
+            )
         }
+        binding.wireframeBtn.text = String.format(
+            resources.getString(R.string.wireframe_button),
+            if (fullscreenContent.getWireframeState()) "On" else "Off",
+        )
+
+        binding.transparencyBtn.setOnClickListener {
+            fullscreenContent.toggleTransparency()
+            binding.transparencyBtn.text = String.format(
+                resources.getString(R.string.transparency_button),
+                if (fullscreenContent.getTransparencyState()) "On" else "Off",
+            )
+        }
+        binding.transparencyBtn.text = String.format(
+            resources.getString(R.string.transparency_button),
+            if (fullscreenContent.getTransparencyState()) "On" else "Off",
+        )
 
         fullscreenContentControls = binding.fullscreenContentControls
     }
@@ -55,7 +75,6 @@ class GameActivity : AppCompatActivity() {
         // Hide UI first
         fullscreenContentControls.visibility = View.GONE
         isFullscreen = false
-        hideSystemBars()
     }
 
     private fun show() {
